@@ -1,0 +1,52 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print API Result to Table</title>
+</head>
+<body>
+Azure retail price api <br>
+API version: 2023-01-01-preview
+    <table id="resultTable" border="1">
+        <thead>
+            <tr>
+                <th>Service Name</th>
+                <th>Region</th>
+                <th>SKU Name</th>
+                <th>Price</th>
+                <th>Currency</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "https://prices.azure.com/api/retail/prices?api-version=2023-01-01-preview", true);
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(xhr.responseText);
+                var resultTable = document.getElementById("resultTable");
+                var tbody = resultTable.getElementsByTagName("tbody")[0];
+                for (var i = 0; i < response.Items.length; i++) {
+                    var item = response.Items[i];
+                    var row = tbody.insertRow(i);
+                    var serviceNameCell = row.insertCell(0);
+                    serviceNameCell.innerHTML = item.serviceName
+                    var regionCell = row.insertCell(1);
+                    regionCell.innerHTML = item.location;
+                    var skuNameCell = row.insertCell(2);
+                    skuNameCell.innerHTML = item.skuName;
+                    var priceCell = row.insertCell(3);
+                    priceCell.innerHTML = item.retailPrice;
+                    var currencyCell = row.insertCell(4);
+                    currencyCell.innerHTML = item.currencyCode;
+                }
+            }
+        };
+        xhr.send();
+    </script>
+</body>
+</html>
